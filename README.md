@@ -1,6 +1,12 @@
 # planet_thumbs
 
-A tool for downloading Planet Labs imagery thumbnails.
+A tool for downloading Planet Labs imagery thumbnails, like the one below.
+
+![](augustine_2020-02-10T21_08_44_999121Z_PSScene3Band.jpg)
+
+<p align="center">
+  <sup><i>Augustine Volcano on 10 February 2020. Imagery © 2020 Planet Labs.</i></sup>
+</p>
 
 ## Quickstart
 
