@@ -1,6 +1,7 @@
 # planet_thumbs
 
-A tool for downloading Planet Labs imagery thumbnails, like the one below.
+A tool for downloading Planet Labs imagery thumbnails, like the one below, for
+Alaskan volcanoes.
 
 ![](example_thumbnail.jpg)
 
