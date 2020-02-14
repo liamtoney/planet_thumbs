@@ -1,54 +1,74 @@
-from pyproj import Geod
+import os
+import json
 from planet import api
 import requests
 
+# BASIC OPTIONS ----------------------------------------------------------------
 VOLCANO = 'shishaldin'
+# Maximum allowable fraction of cloud cover [0-1]
+MAX_CLOUD_COVER = 0
+# Maximum number of thumbnails to grab
+NUM_THUMBNAILS = 5
+# ------------------------------------------------------------------------------
 
-AOI_RADIUS_KM = 1
+# ADVANCED OPTIONS -------------------------------------------------------------
+# See https://developers.planet.com/docs/data/items-assets/#item-types
+ITEM_TYPES = [
+    'PSScene3Band',
+    'PSScene4Band',
+    'PSOrthoTile',
+    'REOrthoTile',
+    'REScene',
+    'SkySatScene',
+    'SkySatCollect',
+    'Landsat8L1G',
+    'Sentinel2L1C'
+]
+# [px] See https://developers.planet.com/docs/data/item-previews/#size
+IMAGE_WIDTH = 2048
+# Must be valid JSON!
+VOLCANO_COORDINATES_FILE = 'avo_volcanoes.json'
+# ------------------------------------------------------------------------------
 
-PL_API_KEY = os.getenv('PL_API_KEY')
+api_key = os.getenv('PL_API_KEY')
 
-M_PER_KM = 1000
+with open(VOLCANO_COORDINATES_FILE) as f:
+    summit_coordinates = json.load(f)
 
-SUMMIT_COORDINATES = {
-    'shishaldin': (54.7554, -163.9711),
-    'pavlof': (55.4173, -161.8937)
-}
-
-lat_0, lon_0 = SUMMIT_COORDINATES[VOLCANO.lower()]
-
-g = Geod(ellps='WGS84')
-
-lon_min, _, _ = g.fwd(lon_0, lat_0, 270, AOI_RADIUS_KM * M_PER_KM)
-lon_max, _, _ = g.fwd(lon_0, lat_0, 90, AOI_RADIUS_KM * M_PER_KM)
-_, lat_min, _ = g.fwd(lon_0, lat_0, 180, AOI_RADIUS_KM * M_PER_KM)
-_, lat_max, _ = g.fwd(lon_0, lat_0, 0, AOI_RADIUS_KM * M_PER_KM)
+volcano_lowercase = VOLCANO.lower()
+try:
+    coordinates = summit_coordinates[volcano_lowercase][::-1]
+except KeyError:
+    print(f'Volcano "{volcano_lowercase}" not found. Possible options are:')
+    [print(f'\t{volcano}') for volcano in summit_coordinates.keys()]
+    raise
 
 aoi = {
-  "type": "Point",
-  "coordinates": [
-
-      lon_0, lat_0,
-      # [lon_max, lat_min],
-      # [lon_max, lat_max],
-      # [lon_min, lat_max],
-      # [lon_min, lat_min]
-
-  ]
+    "type": "Point",
+    "coordinates": coordinates
 }
+
+client = api.ClientV1()
 
 query = api.filters.and_filter(
     api.filters.geom_filter(aoi),
-    api.filters.range_filter('cloud_cover', lt=0.1)
+    api.filters.range_filter('cloud_cover', lte=MAX_CLOUD_COVER)
 )
 
-item_types = ['PSScene3Band', 'PSScene4Band']
-request = api.filters.build_search_request(query, item_types)
+request = api.filters.build_search_request(query, ITEM_TYPES)
 results = client.quick_search(request)
 
-for item in results.items_iter(5):
+for item in results.items_iter(NUM_THUMBNAILS):
     thumbnail_url = item['_links']['thumbnail']
-    response = requests.get(thumbnail_url, auth=(PL_API_KEY, ''),
-                           params=dict(width=2048))
-    with open('{}.png'.format(item['properties']['acquired']), 'wb') as f:
+    response = requests.get(thumbnail_url, auth=(api_key, ''),
+                           params=dict(width=IMAGE_WIDTH))
+    filename = '_'.join([volcano_lowercase,
+                         item['properties']['acquired'],
+                         item['properties']['item_type']
+                         ])
+    filename = filename.replace('.', '_')
+    filename = filename.replace(':', '_')
+    filename += '.png'
+    print(filename)
+    with open(filename, 'wb') as f:
         f.write(response.content)
