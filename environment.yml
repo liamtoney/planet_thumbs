@@ -1,0 +1,6 @@
+name: planet_thumbs
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - planet
