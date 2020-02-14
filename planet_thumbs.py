@@ -76,5 +76,5 @@ for item in results.items_iter(NUM_THUMBNAILS):
         filename = filename.split('.')[0] + '0' + '.png'
     with open(filename, 'wb') as f:
         f.write(response.content)
-    print(filename)
     filenames.append(filename)
+    print(filename)
