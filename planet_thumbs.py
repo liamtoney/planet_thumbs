@@ -26,7 +26,7 @@ ITEM_TYPES = [
 # [px] See https://developers.planet.com/docs/data/item-previews/#size
 IMAGE_WIDTH = 2048
 
-# Must be valid JSON!
+# Must be valid JSON and in the same directory as this script!
 VOLCANO_COORDINATES_FILE = 'avo_volcanoes.json'
 
 if len(sys.argv) != 2:
@@ -35,7 +35,8 @@ volcano = sys.argv[1]
 
 api_key = os.getenv('PL_API_KEY')
 
-with open(VOLCANO_COORDINATES_FILE) as f:
+script_dir = os.path.dirname(__file__)
+with open(os.path.join(script_dir, VOLCANO_COORDINATES_FILE)) as f:
     summit_coordinates = json.load(f)
 
 volcano_lowercase = volcano.lower()
