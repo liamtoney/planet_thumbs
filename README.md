@@ -29,3 +29,18 @@ variable `PL_API_KEY` to your key's value prior to running the script.
    ```
    python planet_thumbs.py <alaskan_volcano_name>
    ```
+
+## Example
+
+To grab the most recent thumbnails for Korovin Volcano, run
+```
+python planet_thumbs.py korovin
+```
+which produces the following thumbnails (when run on 14 February 2020).
+```
+korovin_2020-02-03T22_02_25_167781Z_PSScene3Band.png
+korovin_2020-01-29T21_58_46_150495Z_PSScene3Band.png
+korovin_2020-01-16T22_16_49_817145Z_PSScene3Band.png
+korovin_2019-12-20T22_03_44_716131Z_PSScene3Band.png
+korovin_2019-04-30T22_25_04_25561Z_PSOrthoTile.png
+```
