@@ -17,7 +17,7 @@ ITEM_TYPES = [
     'PSOrthoTile',
     'REOrthoTile',
     'REScene',
-    'Sentinel2L1C'
+    'Sentinel2L1C',
 ]
 
 # [px] See https://developers.planet.com/docs/data/item-previews/#size
@@ -49,7 +49,7 @@ client = api.ClientV1()
 
 query = api.filters.and_filter(
     api.filters.geom_filter(dict(type='Point', coordinates=coordinates)),
-    api.filters.range_filter('cloud_cover', lte=MAX_CLOUD_COVER)
+    api.filters.range_filter('cloud_cover', lte=MAX_CLOUD_COVER),
 )
 
 request = api.filters.build_search_request(query, ITEM_TYPES)
@@ -58,12 +58,16 @@ results = client.quick_search(request)
 filenames = []
 for item in results.items_iter(NUM_THUMBNAILS):
     thumbnail_url = item['_links']['thumbnail']
-    response = requests.get(thumbnail_url, auth=(api_key, ''),
-                            params=dict(width=IMAGE_WIDTH))
-    filename = '_'.join([volcano_lowercase,
-                         item['properties']['acquired'],
-                         item['properties']['item_type']
-                         ])
+    response = requests.get(
+        thumbnail_url, auth=(api_key, ''), params=dict(width=IMAGE_WIDTH)
+    )
+    filename = '_'.join(
+        [
+            volcano_lowercase,
+            item['properties']['acquired'],
+            item['properties']['item_type'],
+        ]
+    )
     filename = filename.replace('.', '_')
     filename = filename.replace(':', '_')
     filename += '.png'
