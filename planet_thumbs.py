@@ -17,9 +17,6 @@ ITEM_TYPES = [
     'PSOrthoTile',
     'REOrthoTile',
     'REScene',
-    'SkySatScene',
-    'SkySatCollect',
-    'Landsat8L1G',
     'Sentinel2L1C'
 ]
 
