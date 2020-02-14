@@ -1,17 +1,15 @@
+import sys
 import os
 import json
 from planet import api
 import requests
 
-# BASIC OPTIONS ----------------------------------------------------------------
-VOLCANO = 'shishaldin'
 # Maximum allowable fraction of cloud cover [0-1]
 MAX_CLOUD_COVER = 0
+
 # Maximum number of thumbnails to grab
 NUM_THUMBNAILS = 5
-# ------------------------------------------------------------------------------
 
-# ADVANCED OPTIONS -------------------------------------------------------------
 # See https://developers.planet.com/docs/data/items-assets/#item-types
 ITEM_TYPES = [
     'PSScene3Band',
@@ -24,23 +22,29 @@ ITEM_TYPES = [
     'Landsat8L1G',
     'Sentinel2L1C'
 ]
+
 # [px] See https://developers.planet.com/docs/data/item-previews/#size
 IMAGE_WIDTH = 2048
+
 # Must be valid JSON!
 VOLCANO_COORDINATES_FILE = 'avo_volcanoes.json'
-# ------------------------------------------------------------------------------
+
+if len(sys.argv) != 2:
+    raise TypeError('Please specify a (single) volcano!')
+volcano = sys.argv[1]
 
 api_key = os.getenv('PL_API_KEY')
 
 with open(VOLCANO_COORDINATES_FILE) as f:
     summit_coordinates = json.load(f)
 
-volcano_lowercase = VOLCANO.lower()
+volcano_lowercase = volcano.lower()
 try:
     coordinates = summit_coordinates[volcano_lowercase][::-1]
 except KeyError:
-    print(f'Volcano "{volcano_lowercase}" not found. Possible options are:')
+    print(f'Volcano "{volcano_lowercase}" not found. Possible options are:\n')
     [print(f'\t{volcano}') for volcano in summit_coordinates.keys()]
+    print()
     raise
 
 aoi = {

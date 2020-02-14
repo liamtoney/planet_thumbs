@@ -21,5 +21,5 @@ variable `PL_API_KEY` to your key's value prior to running the script.
 
 3. Run
    ```
-   python planet_thumbs.py
+   python planet_thumbs.py <alaskan_volcano_name>
    ```
