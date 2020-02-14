@@ -57,6 +57,7 @@ query = api.filters.and_filter(
 request = api.filters.build_search_request(query, ITEM_TYPES)
 results = client.quick_search(request)
 
+filenames = []
 for item in results.items_iter(NUM_THUMBNAILS):
     thumbnail_url = item['_links']['thumbnail']
     response = requests.get(thumbnail_url, auth=(api_key, ''),
@@ -68,6 +69,10 @@ for item in results.items_iter(NUM_THUMBNAILS):
     filename = filename.replace('.', '_')
     filename = filename.replace(':', '_')
     filename += '.png'
+    # If we'd overwrite existing files, append a "0" to the filename
+    if filename in filenames:
+        filename = filename.split('.')[0] + '0' + '.png'
     with open(filename, 'wb') as f:
         f.write(response.content)
     print(filename)
+    filenames.append(filename)
