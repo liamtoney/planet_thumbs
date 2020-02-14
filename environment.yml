@@ -1,7 +1,0 @@
-name: planet_thumbs
-channels:
-  - conda-forge
-  - defaults
-dependencies:
-  - ipython
-  - planet
