@@ -30,6 +30,7 @@ if len(sys.argv) != 2:
     raise TypeError('Please specify a (single) volcano!')
 volcano = sys.argv[1]
 
+# This reads in the PL_API_KEY environment variable
 api_key = os.getenv('PL_API_KEY')
 
 script_dir = os.path.dirname(__file__)
@@ -47,6 +48,7 @@ except KeyError:
 
 client = api.ClientV1()
 
+# Can specify other filters here to further constrain search
 query = api.filters.and_filter(
     api.filters.geom_filter(dict(type='Point', coordinates=coordinates)),
     api.filters.range_filter('cloud_cover', lte=MAX_CLOUD_COVER),
