@@ -47,15 +47,10 @@ except KeyError:
     print()
     raise
 
-aoi = {
-    "type": "Point",
-    "coordinates": coordinates
-}
-
 client = api.ClientV1()
 
 query = api.filters.and_filter(
-    api.filters.geom_filter(aoi),
+    api.filters.geom_filter(dict(type='Point', coordinates=coordinates)),
     api.filters.range_filter('cloud_cover', lte=MAX_CLOUD_COVER)
 )
 
@@ -65,7 +60,7 @@ results = client.quick_search(request)
 for item in results.items_iter(NUM_THUMBNAILS):
     thumbnail_url = item['_links']['thumbnail']
     response = requests.get(thumbnail_url, auth=(api_key, ''),
-                           params=dict(width=IMAGE_WIDTH))
+                            params=dict(width=IMAGE_WIDTH))
     filename = '_'.join([volcano_lowercase,
                          item['properties']['acquired'],
                          item['properties']['item_type']
@@ -73,6 +68,6 @@ for item in results.items_iter(NUM_THUMBNAILS):
     filename = filename.replace('.', '_')
     filename = filename.replace(':', '_')
     filename += '.png'
-    print(filename)
     with open(filename, 'wb') as f:
         f.write(response.content)
+    print(filename)
