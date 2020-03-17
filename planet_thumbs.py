@@ -64,18 +64,9 @@ for item in results.items_iter(NUM_THUMBNAILS):
         thumbnail_url, auth=(api_key, ''), params=dict(width=IMAGE_WIDTH)
     )
     filename = '_'.join(
-        [
-            volcano_lowercase,
-            item['properties']['acquired'],
-            item['properties']['item_type'],
-        ]
+        [volcano_lowercase, item['id'], item['properties']['item_type'],]
     )
-    filename = filename.replace('.', '_')
-    filename = filename.replace(':', '_')
     filename += '.png'
-    # If we'd overwrite existing files, append a "0" to the filename
-    if filename in filenames:
-        filename = filename.split('.')[0] + '0' + '.png'
     with open(filename, 'wb') as f:
         f.write(response.content)
     filenames.append(filename)
