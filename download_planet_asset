@@ -21,6 +21,6 @@ status=`curl_auth -s $asset_url | jq -r .$3.status`
 # Attempt to download asset
 if [ "$status" = "active" ]; then
   curl_auth `curl_auth -s $asset_url | jq -r .$3.location` > $1_$2_$3.tif
-else  # Either the asset is being activated, or it's null (likely doesn't exist)
+else  # Will be either "activating" or "null"
   echo $status
 fi
