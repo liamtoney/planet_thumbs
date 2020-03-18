@@ -35,7 +35,7 @@ sign up for the Planet Labs Education and Research Program, go
    ```
    or
    ```
-   ./download_planet_asset.sh <item_id> <item_type> <asset_type>
+   ./download_planet_asset <item_id> <item_type> <asset_type>
    ```
 
 ## Examples
@@ -60,7 +60,7 @@ sign up for the Planet Labs Education and Research Program, go
 2. To grab the full-resolution visual image corresponding to the first thumbnail
    listed above, run
    ```
-   ./download_planet_asset.sh 20200217_215658_99_106c PSScene3Band visual
+   ./download_planet_asset 20200217_215658_99_106c PSScene3Band visual
    ```
    which downloads the full-resolution product as
    ```
@@ -69,7 +69,7 @@ sign up for the Planet Labs Education and Research Program, go
 
 ## Notes
 
-1. The first time `download_planet_asset.sh` is run for a given item, the item
+1. The first time `download_planet_asset` is run for a given item, the item
    is "activated" (queued for downloading). Repeated calls to the script will
    print `activating` until the item is queued; then a call to the script will
    download the file.
