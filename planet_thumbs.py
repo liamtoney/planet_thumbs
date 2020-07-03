@@ -1,8 +1,9 @@
-import sys
-import os
 import json
-from planet import api
+import os
+import sys
+
 import requests
+from planet import api
 
 # Maximum allowable fraction of cloud cover [0-1]
 MAX_CLOUD_COVER = 0
