@@ -1,7 +1,7 @@
 # planet_thumbs
 
 A tool for downloading Planet Labs imagery thumbnails, like the one below, for
-Alaskan volcanoes. (Also provides a shell script for downloading full-resolution
+Alaska volcanoes. (Also provides a shell script for downloading full-resolution
 images.)
 
 ![](example_thumbnail.jpg)
@@ -31,7 +31,7 @@ sign up for the Planet Labs Education and Research Program, go
 
 3. Run
    ```
-   python planet_thumbs.py <alaskan_volcano_name>
+   python planet_thumbs.py <alaska_volcano_name>
    ```
    or
    ```
